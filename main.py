@@ -6,7 +6,7 @@ import platform as pl
 import ball as b
 import block as bl
 
-current_level = lvl.LEVEL_2
+current_level = lvl.LEVEL_1
 WIN_WIDTH = len(current_level[0]) * 20
 WIN_HEIGHT = len(current_level) * 20
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
@@ -15,7 +15,7 @@ BORDER_COLOR = "#000e47"
 platform = pl.Platform(WIN_WIDTH)
 ball = b.Ball(WIN_WIDTH, WIN_HEIGHT)
 blocks = []
-i = 0
+timer = pygame.time.Clock()
 
 
 def main():
@@ -26,8 +26,8 @@ def main():
     pygame.display.set_caption("Something")
     bg = Surface(DISPLAY)
     bg.fill(Color(BACKGROUND_COLOR))
-
     while True:
+        timer.tick(1500)
         for e in pygame.event.get():
             if e.type == QUIT:
                 sys.exit()
@@ -96,32 +96,17 @@ def reflect_ball_by_wall():
 
 
 def reflect_ball_by_block():
-    global i
     for block in blocks:
         if ball.top == block.bottom or ball.bottom == block.top:
-            if block.left < ball.x < block.right:
+            if block.left <= ball.left <= block.right or \
+                    block.left <= ball.right <= block.right:
                 ball.speed[1] = -ball.speed[1]
                 blocks.remove(block)
-                i += 1
-                print(str(i) + ". removed")
-            elif ball.left == block.right or ball.right == block.left:
-                ball.speed[0] = -ball.speed[0]
-                ball.speed[1] = -ball.speed[1]
-                blocks.remove(block)
-                i += 1
-                print(str(i) + ". removed")
         if ball.left == block.right or ball.right == block.left:
-            if block.top < ball.y < block.bottom:
+            if block.top < ball.top < block.bottom or \
+                    block.top < ball.top < block.bottom:
                 ball.speed[0] = -ball.speed[0]
                 blocks.remove(block)
-                i += 1
-                print(str(i) + ". removed")
-            elif ball.top == block.bottom or ball.bottom == block.top:
-                ball.speed[0] = -ball.speed[0]
-                ball.speed[1] = -ball.speed[1]
-                blocks.remove(block)
-                i += 1
-                print(str(i) + ". removed")
     check_win()
 
 
