@@ -44,13 +44,14 @@ def main():
                 platform.RIGHT_COORD += platform.MOVE_SPEED
         ball.x += ball.speed[0]
         ball.y += ball.speed[1]
-        if ball.x <= 30 or ball.x > WIN_WIDTH - 30:
+        ball.recount_coordinates()
+        if ball.left <= 20 or ball.right > WIN_WIDTH - 20:
             ball.speed[0] = -ball.speed[0]
-        if ball.y > WIN_HEIGHT - 30:
+        if ball.bottom >= WIN_HEIGHT - 20:
             ball.dead()
-        if ball.y <= 30:
+        if ball.top <= 20:
             ball.speed[1] = -ball.speed[1]
-        if ball.y > WIN_HEIGHT - 50 and platform.LEFT_COORD < ball.x < platform.RIGHT_COORD:
+        if ball.bottom > WIN_HEIGHT - 40 and platform.LEFT_COORD < ball.x < platform.RIGHT_COORD:
             ball.speed[1] = -ball.speed[1]
         draw_elements(screen, bg)
         pygame.display.update()
