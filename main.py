@@ -39,7 +39,7 @@ def main():
                 platform.LEFT_COORD -= platform.MOVE_SPEED
                 platform.RIGHT_COORD -= platform.MOVE_SPEED
         if platform.MOVING_RIGHT:
-            if platform.RIGHT_COORD + platform.MOVE_SPEED <= WIN_WIDTH - 20:
+            if platform.RIGHT_COORD + platform.MOVE_SPEED <= WIN_WIDTH:
                 platform.LEFT_COORD += platform.MOVE_SPEED
                 platform.RIGHT_COORD += platform.MOVE_SPEED
         ball.x += ball.speed[0]
