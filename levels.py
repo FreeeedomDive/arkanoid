@@ -44,3 +44,22 @@ LEVEL_2 = [
     "B                          B",
     "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 ]
+
+LEVEL_3 = [
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    "B                          B",
+    "B   111111        111111   B",
+    "B                          B",
+    "B                          B",
+    "B  1111111111111111111111  B",
+    "B      11111111111111      B",
+    "B  111111111111111111111   B",
+    "B      11111111111111      B",
+    "B                          B",
+    "B                          B",
+    "B    1111         1111     B",
+    "B                          B",
+    "B                          B",
+    "B                          B",
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+]

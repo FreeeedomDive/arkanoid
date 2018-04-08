@@ -27,7 +27,7 @@ def main():
     bg = Surface(DISPLAY)
     bg.fill(Color(BACKGROUND_COLOR))
     while True:
-        timer.tick(1500)
+        timer.tick(200)
         for e in pygame.event.get():
             if e.type == QUIT:
                 sys.exit()
@@ -48,7 +48,6 @@ def add_blocks():
             if col.isdigit():
                 block = bl.Block(i * 20 + 10, j * 20 + 10)
                 temp.append(block)
-                print("added block")
             i += 1
         i = 0
         j += 1
@@ -112,7 +111,7 @@ def reflect_ball_by_block():
 
 def check_win():
     if len(blocks) == 0:
-        print("DEBIL")
+        print("gege")
         sys.exit(0)
 
 
