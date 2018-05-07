@@ -31,18 +31,18 @@ LEVEL_1 = [
     "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"]
 
 LEVEL_2 = [
-    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-    "B                          B",
-    "B                          B",
-    "B                          B",
-    "B        11111111111       B",
-    "B        11111111111       B",
-    "B        11111111111       B",
-    "B        11111111111       B",
-    "B        11111111111       B",
-    "B                          B",
-    "B                          B",
-    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    "B                         B",
+    "B                         B",
+    "B                         B",
+    "B       11112221111       B",
+    "B       11112221111       B",
+    "B2222   22222222222   2222B",
+    "B       11112221111       B",
+    "B       11112221111       B",
+    "B                         B",
+    "B                         B",
+    "B                         B"
 ]
 
 LEVEL_3 = [
@@ -61,5 +61,5 @@ LEVEL_3 = [
     "B                          B",
     "B                          B",
     "B                          B",
-    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+    "B                          B"
 ]
