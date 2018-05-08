@@ -9,7 +9,7 @@ class Game:
 
     def __init__(self):
         self.current_level = []
-        self.create_map("Levels/level2.txt")
+        self.create_map("Levels/level3.txt")
         self.WIN_WIDTH = len(self.current_level[0]) * 20 - 20
         self.WIN_HEIGHT = len(self.current_level) * 20
         self.DISPLAY = (self.WIN_WIDTH, self.WIN_HEIGHT)
@@ -18,6 +18,7 @@ class Game:
         self.platform = pl.Platform(self.WIN_WIDTH)
         self.ball = b.Ball(self.WIN_WIDTH, self.WIN_HEIGHT)
         self.blocks = []
+        self.on_pause = False
         self.timer = pg.time.Clock()
 
     def create_map(self, filename):
@@ -39,16 +40,26 @@ class Game:
             for e in pg.event.get():
                 if e.type == pg.QUIT:
                     sys.exit()
-                self.check_platform_moving(e)
-            self.move_platform()
-            self.ball.move()
-            self.reflect_ball_by_block()
-            self.reflect_ball_by_wall()
-            self.draw_elements(screen, bg)
-            pg.display.update()
+                self.handle_pressed_keys(e)
+            if not self.on_pause:
+                self.move_platform()
+                self.ball.move()
+                self.reflect_ball_by_block()
+                self.reflect_ball_by_wall()
+                self.draw_elements(screen, bg)
+                pg.display.update()
+            else:
+                self.draw_pause(screen)
 
     def create_new_game(self, map):
         pass
+
+    def draw_pause(self, screen):
+        text = "Game paused"
+        (x, y, font_size) = (self.WIN_WIDTH * 20 // 2 - 50, self.WIN_HEIGHT * 20 // 2 - 40, 40)
+        font = pg.font.SysFont("impact", font_size, False, True)
+        image = font.render(text, 0, (255, 255, 255), (0, 0, 255))
+        screen.blit(image, (x, y))
 
     def add_blocks(self):
         temp = []
@@ -63,7 +74,7 @@ class Game:
             j += 1
         return temp
 
-    def check_platform_moving(self, e):
+    def handle_pressed_keys(self, e):
         if e.type == pg.KEYDOWN and e.key == pg.K_a:
             self.platform.MOVING_LEFT = True
         if e.type == pg.KEYDOWN and e.key == pg.K_d:
@@ -72,6 +83,11 @@ class Game:
             self.platform.MOVING_LEFT = False
         if e.type == pg.KEYUP and e.key == pg.K_d:
             self.platform.MOVING_RIGHT = False
+        if e.type == pg.KEYDOWN and e.key == pg.K_q:
+            if self.on_pause:
+                self.on_pause = False
+            else:
+                self.on_pause = True
 
     def move_platform(self):
         if self.platform.LEFT_COORD >= 20 and self.platform.MOVING_LEFT:
@@ -92,46 +108,6 @@ class Game:
                 self.ball.speed[1] = -self.ball.speed[1]
 
     def reflect_ball_by_block(self):
-        # if ball.speed[0] > 0 and ball.speed[1] < 0:
-        #     for block in blocks:
-        #         if ball.left == block.left and ball.right == block.right \
-        #                 and ball.top == block.bottom:
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        #         elif ball.right == block.left and ball.top == block.bottom:
-        #             ball.speed[0] = -ball.speed[0]
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        # elif ball.speed[0] < 0 and ball.speed[1] < 0:
-        #     for block in blocks:
-        #         if ball.left == block.left and ball.right == block.right \
-        #                 and ball.top == block.bottom:
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        #         elif ball.left == block.right and ball.top == block.bottom:
-        #             ball.speed[0] = -ball.speed[0]
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        # elif ball.speed[0] > 0 and ball.speed[1] > 0:
-        #     for block in blocks:
-        #         if ball.left == block.left and ball.right == block.right \
-        #                 and ball.bottom == block.top:
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        #         elif ball.left == block.right and ball.bottom == block.top:
-        #             ball.speed[0] = -ball.speed[0]
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        # else:
-        #     for block in blocks:
-        #         if ball.left == block.left and ball.right == block.right \
-        #                 and ball.bottom == block.top:
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
-        #         elif ball.right == block.left and ball.bottom == block.top:
-        #             ball.speed[0] = -ball.speed[0]
-        #             ball.speed[1] = -ball.speed[1]
-        #             blocks.remove(block)
         for block in self.blocks:
             if self.ball.top == block.bottom or self.ball.bottom == block.top:
                 if block.left <= self.ball.left <= block.right or \
@@ -139,15 +115,19 @@ class Game:
                     self.ball.speed[1] = -self.ball.speed[1]
                     if block.decrease_and_check_destroying():
                         self.blocks.remove(block)
-            if self.ball.left == block.right or self.ball.right == block.left:
-                if block.top < self.ball.top < block.bottom or \
-                        block.top < self.ball.top < block.bottom:
+                    self.check_win()
+                    return
+            elif self.ball.left == block.right or self.ball.right == block.left:
+                if block.top <= self.ball.top <= block.bottom or \
+                        block.top <= self.ball.bottom <= block.bottom:
                     self.ball.speed[0] = -self.ball.speed[0]
                     if block.decrease_and_check_destroying():
                         self.blocks.remove(block)
-                self.check_win()
+                    self.check_win()
+                    return
 
     def check_win(self):
+        print(len(self.blocks))
         if len(self.blocks) == 0:
             print("gege")
             sys.exit(0)
