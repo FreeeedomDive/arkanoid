@@ -51,12 +51,13 @@ class Game:
             else:
                 self.draw_pause(screen)
 
-    def create_new_game(self, map):
+    def create_next_level(self, map):
         pass
 
     def draw_pause(self, screen):
         text = "Game paused"
-        (x, y, font_size) = (self.WIN_WIDTH * 20 // 2 - 50, self.WIN_HEIGHT * 20 // 2 - 40, 40)
+        (x, y, font_size) = (self.WIN_WIDTH * 20 // 2 - 50,
+                             self.WIN_HEIGHT * 20 // 2 - 40, 40)
         font = pg.font.SysFont("impact", font_size, False, True)
         image = font.render(text, 0, (255, 255, 255), (0, 0, 255))
         screen.blit(image, (x, y))
@@ -92,20 +93,23 @@ class Game:
     def move_platform(self):
         if self.platform.LEFT_COORD >= 20 and self.platform.MOVING_LEFT:
             self.platform.move(-1)
-        if self.platform.RIGHT_COORD <= self.WIN_WIDTH - 20 and self.platform.MOVING_RIGHT:
+        if self.platform.RIGHT_COORD <= self.WIN_WIDTH - 20 \
+                and self.platform.MOVING_RIGHT:
             self.platform.move(1)
 
     def reflect_ball_by_wall(self):
-        if self.ball.left == 20 or self.ball.right == self.WIN_WIDTH - 20:
-            self.ball.speed[0] = -self.ball.speed[0]
-        if self.ball.bottom == self.WIN_HEIGHT - 20:
-            self.ball.dead()
         if self.ball.top == 20:
             self.ball.speed[1] = -self.ball.speed[1]
-        if self.ball.bottom == self.WIN_HEIGHT - 40:
-            if self.platform.LEFT_COORD < self.ball.left < self.platform.RIGHT_COORD or \
-                    self.platform.LEFT_COORD < self.ball.right < self.platform.RIGHT_COORD:
+        elif self.ball.left == 20 or self.ball.right == self.WIN_WIDTH - 20:
+            self.ball.speed[0] = -self.ball.speed[0]
+        elif self.ball.bottom == self.WIN_HEIGHT - 40:
+            if self.platform.LEFT_COORD < self.ball.left < \
+                    self.platform.RIGHT_COORD or \
+                    self.platform.LEFT_COORD < self.ball.right < \
+                    self.platform.RIGHT_COORD:
                 self.ball.speed[1] = -self.ball.speed[1]
+        elif self.ball.bottom == self.WIN_HEIGHT - 20:
+            self.ball.dead()
 
     def reflect_ball_by_block(self):
         for block in self.blocks:
@@ -117,7 +121,8 @@ class Game:
                         self.blocks.remove(block)
                     self.check_win()
                     return
-            elif self.ball.left == block.right or self.ball.right == block.left:
+            elif self.ball.left == block.right or \
+                    self.ball.right == block.left:
                 if block.top <= self.ball.top <= block.bottom or \
                         block.top <= self.ball.bottom <= block.bottom:
                     self.ball.speed[0] = -self.ball.speed[0]

@@ -14,7 +14,6 @@ class Block(pg.sprite.Sprite):
         self.strength = str
         file_name = "Images/block{0}.png".format(self.strength)
         self.image = pg.image.load(file_name)
-        self.color = "#800000"
 
     def recount_coordinates(self):
         self.top = self.y - 10
