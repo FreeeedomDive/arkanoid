@@ -2,5 +2,5 @@ import game
 
 
 if __name__ == "__main__":
-    g = game.Game()
-    g.run()
+    g = game.Game(1, 0, 2)
+    g.start()

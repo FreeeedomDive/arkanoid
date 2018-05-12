@@ -19,7 +19,7 @@ class Ball:
         self.y += self.speed[1]
         self.recount_coordinates()
 
-    def dead(self):
+    def reincarnate(self):
         self.x = random.randint(20, self.screen_width - 20)
         self.y = self.start_y
         self.recount_coordinates()
