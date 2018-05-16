@@ -1,10 +1,9 @@
 import pygame as pg
 
 
-class Block(pg.sprite.Sprite):
+class Block:
 
     def __init__(self, x, y, str):
-        super().__init__()
         self.x = x
         self.y = y
         self.top = self.y - 10

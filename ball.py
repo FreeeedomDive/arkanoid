@@ -3,16 +3,36 @@ import random
 
 class Ball:
 
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, x=-1, y=-1, sp0=-1,
+                 sp1=-1, start=-1):
         self.screen_width = screen_width
-        self.x = random.randint(20, screen_width - 20)
-        self.start_y = self.y = screen_height - 50
+        if x == -1:
+            self.x = random.randint(40, screen_width - 40)
+            self.start_y = self.y = screen_height - 50
+            self.speed = [1, -1]
+        else:
+            self.x = x
+            self.y = y
+            self.speed = [sp0, sp1]
+            self.start_y = start
+        self.basic_speed = 1
         self.top = self.y - 10
         self.bottom = self.y + 10
         self.left = self.x - 10
         self.right = self.x + 10
-        self.speed = [1, -1]
         self.color = "#c8ff00"
+
+    # def __init__(self, x, y, speed0, speed1, start):
+    #     self.x = x
+    #     self.y = y
+    #     self.start_y = start
+    #     self.top = self.y - 10
+    #     self.bottom = self.y + 10
+    #     self.left = self.x - 10
+    #     self.right = self.x + 10
+    #     self.basic_speed = 1
+    #     self.speed = [speed0, speed1]
+    #     self.color = "#c8ff00"
 
     def move(self):
         self.x += self.speed[0]
@@ -23,6 +43,7 @@ class Ball:
         self.x = random.randint(20, self.screen_width - 20)
         self.y = self.start_y
         self.recount_coordinates()
+        self.basic_speed = 1
         self.speed = [1, -1]
 
     def recount_coordinates(self):
