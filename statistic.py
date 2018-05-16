@@ -18,4 +18,5 @@ class Statistic:
         self.screen.blit(text, [10, 15])
         text = font.render("Your final score: {0}".format(self.score), True, (0, 0, 0))
         self.screen.blit(text, [10, 40])
-        pygame.display.update()
+        while True:
+            pygame.display.update()

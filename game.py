@@ -10,6 +10,12 @@ import block as bl
 
 class Game:
 
+    music_files = {1: "Music/dayofthedead.mp3",
+             2: "Music/whateverittakes.mp3",
+             3: "Music/thunder.mp3",
+             4: "Music/castle.mp3",
+             5: "Music/highscore.mp3"}
+
     def __init__(self, id=1, score=0, life=3, f=None):
         if f is not None:
             args = f.split(";")
@@ -81,6 +87,9 @@ class Game:
     def start(self):
         pg.init()
         pg.display.set_caption("Arkanoid")
+        pg.mixer.music.load(self.music_files[self.current_level_index])
+        pg.mixer.music.set_volume(0.025)
+        pg.mixer.music.play(25)
         self.bg.fill(pg.Color(self.background_color))
         while True:
             self.timer.tick(200)
@@ -126,6 +135,14 @@ class Game:
             if self.ctrl_pressed:
                 print("Saved")
                 self.save_game()
+        if e.type == pg.KEYDOWN and e.key == pg.K_KP_MINUS:
+            volume = pg.mixer.music.get_volume()
+            volume -= 0.025
+            pg.mixer.music.set_volume(volume)
+        if e.type == pg.KEYDOWN and e.key == pg.K_KP_PLUS:
+            volume = pg.mixer.music.get_volume()
+            volume += 0.025
+            pg.mixer.music.set_volume(volume)
 
     def save_game(self):
         game = str(self.current_level_index) + ";"
@@ -221,6 +238,7 @@ class Game:
 
     def check_win(self):
         if len(self.blocks) == 0:
+            pg.mixer.music.stop()
             g = Game(self.current_level_index + 1, self.score, self.life + 1)
             g.start()
             self.timer = None

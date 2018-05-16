@@ -9,7 +9,7 @@ class Menu:
         self.display = (320, 240)
         self.screen = pygame.display.set_mode(self.display)
         self.bg = pygame.Surface(self.display)
-        self.background_color = "#000f40"
+        self.background_color = "#00ff40"
         self.item1 = "1: Start new game"
         self.item2 = "2: Load game"
         self.item3 = "3: Create new level"
