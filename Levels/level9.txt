@@ -1,0 +1,16 @@
+BBBBBBBBBBBBBBBBBBBBBBB
+B                     B
+B                     B
+B                     B
+B                     B
+B 3 3 3 3 3 3 3 3 3 3 B
+B5 5 5 5 5 5 5 5 5 5 5B
+B 3 3 3 3 3 3 3 3 3 3 B
+B111111111111111111111B
+B                     B
+B                     B
+B                     B
+B                     B
+B                     B
+B                     B
+B                     B

@@ -1,18 +1,16 @@
-BBBBBBBBBBBBBBBBBBBBBBBBBBB
-B                         B
-B                         B
-B                         B
-B       11111111111       B
-B       11112221111       B
-B1111   11111111111   1111B
-B       11112221111       B
-B       11111111111       B
-B                         B
-B                         B
-B                         B
-B                         B
-B                         B
-B                         B
-B                         B
-B                         B
-B                         B
+BBBBBBBBBBBBBBBBBB
+B                B
+B                B
+B                B
+B  1111    1111  B
+B  1111    1111  B
+B  111111111111  B
+B  1111    1111  B
+B  1111    1111  B
+B                B
+B                B
+B                B
+B                B
+B                B
+B                B
+B                B

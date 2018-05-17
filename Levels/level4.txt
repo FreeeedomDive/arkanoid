@@ -1,23 +1,18 @@
-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-B                                B
-B                                B
-B     2222222222222222222222     B
-B     2                    2     B
-B     2                    2     B
-B     2333333333333333333332     B
-B     2                    2     B
-B     2                    2     B
-B     2                    2     B
-B11111111111111111111111111111111B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
-B                                B
+BBBBBBBBBBBBBBBBBBBBBBBBBBB
+B                         B
+B                         B
+B                         B
+B       11111111111       B
+B       11112221111       B
+B1111   11111111111   1111B
+B       11112221111       B
+B       11111111111       B
+B                         B
+B                         B
+B                         B
+B                         B
+B                         B
+B                         B
+B                         B
+B                         B
+B                         B

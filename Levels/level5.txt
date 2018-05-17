@@ -1,22 +1,20 @@
-BBBBBBBBBBBBBBBBBBBBBBBBBBBB
-B                          B
-B            33            B
-B           3223           B
-B          321123          B
-B         321  123         B
-B        321    123        B
-B       321      123       B
-B      321        123      B
-B     3214444444444123     B
-B    321            123    B
-B   321              123   B
-B  321                123  B
-B 321                  123 B
-B321                    123B
-B                          B
-B                          B
-B                          B
-B                          B
-B                          B
-B                          B
-B                          B
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+B                            B
+B                            B
+B                            B
+B        111111111111        B
+B2222222222222222222222222222B
+B    11111111111111111111    B
+B        222222222222        B
+B1111111111111111111111111111B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B
+B                            B

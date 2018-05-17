@@ -3,18 +3,20 @@ import sys
 import platform as pl
 import ball as b
 import map as m
-import math
 import statistic
 import block as bl
 
 
 class Game:
-
     music_files = {1: "Music/dayofthedead.mp3",
-             2: "Music/whateverittakes.mp3",
-             3: "Music/thunder.mp3",
-             4: "Music/castle.mp3",
-             5: "Music/highscore.mp3"}
+                   2: "Music/whateverittakes.mp3",
+                   3: "Music/thunder.mp3",
+                   4: "Music/castle.mp3",
+                   5: "Music/highscore.mp3",
+                   6: "Music/monster.mp3",
+                   7: "Music/s3rlmtc.mp3",
+                   8: "Music/ethereal.mp3",
+                   9: "Music/medal.mp3"}
 
     def __init__(self, id=1, score=0, life=3, f=None):
         if f is not None:
@@ -25,9 +27,10 @@ class Game:
             self.multiplier = float(args[3])
             try:
                 self.map = m.Map("Levels/level" +
-                                 str(self.current_level_index) + ".txt")
+                                 str(self.current_level_index-1) + ".txt")
             except:
-                stat = statistic.Statistic("You have passed all levels",
+                stat = statistic.Statistic("{0}"
+                                           .format(self.current_level_index),
                                            self.score)
                 stat.draw_stats()
             self.current_level = self.map.map
@@ -64,7 +67,8 @@ class Game:
                 self.map = m.Map("Levels/level" +
                                  str(self.current_level_index) + ".txt")
             except:
-                stat = statistic.Statistic("You have passed all levels",
+                stat = statistic.Statistic("{0}"
+                                           .format(self.current_level_index-1),
                                            self.score)
                 stat.draw_stats()
             self.current_level = self.map.map
@@ -152,7 +156,7 @@ class Game:
         game += str(self.platform.LEFT_COORD) + ";"
         game += str(self.platform.WIDTH) + ";"
         game += str(self.ball.x) + ',' + str(self.ball.y) + ',' + \
-            str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ";"
+                str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ";"
         for block in self.blocks:
             game += str(block.x) + ',' + str(block.y) + ',' + \
                     str(block.strength) + ";"
@@ -179,28 +183,40 @@ class Game:
             self.platform.move(1)
 
     def reflect_ball_by_wall(self):
+        if self.ball.left == 20 or self.ball.right == self.field_width - 20:
+            self.ball.speed[0] = -self.ball.speed[0]
+        if self.ball.bottom == self.win_height - 20:
+            self.score -= int(self.score // 5)
+            self.multiplier = 1.0
+            self.life -= 1
+            if self.life == 0:
+                pg.mixer.music.stop()
+                stats = statistic.Statistic(str(self.current_level_index - 1), self.score)
+                stats.draw_stats()
+            else:
+                self.ball.reincarnate()
+        if self.ball.top == 20:
+            self.ball.speed[1] = -self.ball.speed[1]
+        if self.ball.bottom == self.win_height - 40:
+            if self.platform.LEFT_COORD < self.ball.left < \
+                    self.platform.RIGHT_COORD or \
+                    self.platform.LEFT_COORD < self.ball.right < \
+                    self.platform.RIGHT_COORD:
+                self.ball.speed[1] = -self.ball.speed[1]
+                self.multiplier = 1.0
+
+    def reflect_ball_by_wall2(self):
         if self.ball.top <= 20:
             self.ball.speed[1] = -self.ball.speed[1]
         elif self.ball.left <= 20 or self.ball.right >= self.field_width - 20:
             self.ball.speed[0] = -self.ball.speed[0]
-        elif self.ball.bottom == self.win_height - 40:
-            if self.platform.LEFT_COORD <= self.ball.right <= \
-                    self.platform.LEFT_COORD + self.platform.WIDTH // 2 or \
-                    self.platform.LEFT_COORD <= self.ball.left <= \
-                    self.platform.LEFT_COORD + self.platform.WIDTH // 2:
-                self.ball.speed[1] = -self.ball.speed[1]
-                self.ball.speed[0] = -math.fabs(self.ball.speed[0])
-                self.multiplier = 1.0
-                return
-            elif self.platform.LEFT_COORD + self.platform.WIDTH // 2 <= \
-                    self.ball.left <= self.platform.RIGHT_COORD or \
-                    self.platform.LEFT_COORD + self.platform.WIDTH // 2 <= \
-                    self.ball.right <= self.platform.RIGHT_COORD:
-                self.multiplier = 1.0
-                self.ball.speed[1] = -self.ball.speed[1]
-                self.ball.speed[0] = math.fabs(self.ball.speed[0])
-                return
-        elif self.ball.bottom == self.win_height - 20:
+        else:
+            self.reflect_ball_by_platform()
+
+    def reflect_ball_by_platform(self):
+        if self.ball.bottom >= self.win_height - 40 and \
+                self.ball.right < self.platform.LEFT_COORD or \
+                self.ball.left > self.platform.RIGHT_COORD:
             self.score -= int(self.score // 5)
             self.multiplier = 1.0
             self.life -= 1
@@ -209,6 +225,27 @@ class Game:
                 self.lose = True
             else:
                 self.ball.reincarnate()
+            return
+        if self.ball.bottom >= self.win_height - 40:
+            self.multiplier = 1.0
+            if self.ball.x < self.platform.LEFT_COORD < self.ball.right:
+                self.ball.speed[0] = -self.ball.basic_speed
+                self.ball.speed[1] = -self.ball.basic_speed / 2
+            elif self.ball.left > self.platform.RIGHT_COORD < self.ball.x:
+                self.ball.speed[0] = self.ball.basic_speed
+                self.ball.speed[1] = -self.ball.basic_speed / 2
+            elif self.ball.x == self.platform.LEFT_COORD + \
+                    self.platform.WIDTH / 2:
+                self.ball.speed[0] = 0
+                self.ball.speed[1] = -self.ball.basic_speed
+            else:
+                middle = self.platform.LEFT_COORD + self.platform.WIDTH / 2
+                if self.ball.x < middle:
+                    self.ball.speed[0] = -self.ball.basic_speed
+                    self.ball.speed[1] = -self.platform.LEFT_COORD / middle
+                else:
+                    self.ball.speed[0] = self.ball.basic_speed
+                    self.ball.speed[1] = -middle / self.platform.RIGHT_COORD
 
     def reflect_ball_by_block(self):
         for block in self.blocks:

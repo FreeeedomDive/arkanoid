@@ -24,13 +24,10 @@ class Menu:
         font = pygame.font.Font(None, 25)
         text = font.render(self.item1, True, (255, 255, 255))
         self.screen.blit(text, [10, 15])
-        font = pygame.font.Font(None, 25)
         text = font.render(self.item2, True, (255, 255, 255))
         self.screen.blit(text, [10, 40])
-        font = pygame.font.Font(None, 25)
         text = font.render(self.item3, True, (255, 255, 255))
         self.screen.blit(text, [10, 65])
-        font = pygame.font.Font(None, 25)
         text = font.render(self.item4, True, (255, 255, 255))
         self.screen.blit(text, [10, 90])
         while True:
