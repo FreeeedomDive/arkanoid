@@ -22,6 +22,16 @@ class Ball:
         self.right = self.x + 10
         self.color = "#c8ff00"
 
+    def get_side_of_intersection(self, obj):
+        if self.top == obj.bottom:
+            return "top"
+        if self.bottom == obj.top:
+            return "bottom"
+        if self.left == obj.right:
+            return "left"
+        if self.right == obj.left:
+            return "right"
+
     # def __init__(self, x, y, speed0, speed1, start):
     #     self.x = x
     #     self.y = y
