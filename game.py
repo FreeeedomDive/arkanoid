@@ -1,4 +1,4 @@
-import pygame as pg
+import pygame
 import sys
 import platform as pl
 import ball as b
@@ -41,17 +41,20 @@ class Game:
             self.field_width = len(self.current_level[0]) * 20 - 20
             self.win_width = self.field_width + 150
             self.win_height = len(self.current_level) * 20
-            self.platform = pl.Platform(self.win_width, float(args[4]), float(args[5]))
+            self.platform = pl.Platform(self.win_width,
+                                        float(args[4]), float(args[5]))
             b_args = args[6].split(',')
             self.ball = b.Ball(self.field_width, self.win_height,
-                               float(b_args[0]), float(b_args[1]), float(b_args[2]),
+                               float(b_args[0]), float(b_args[1]),
+                               float(b_args[2]),
                                float(b_args[3]), float(self.win_height - 50))
             self.blocks = []
             for i in range(7, len(args)):
                 if args[i] == '':
                     break
                 block_args = args[i].split(',')
-                self.blocks.append(bl.Block(int(block_args[0]), int(block_args[1]),
+                self.blocks.append(bl.Block(int(block_args[0]),
+                                            int(block_args[1]),
                                             int(block_args[2])))
         else:
             self.current_level_index = id
@@ -62,9 +65,9 @@ class Game:
                 self.map = m.Map("Levels/level" +
                                  str(self.current_level_index) + ".txt")
             except:
-                stat = statistic.Statistic("{0}"
-                                           .format(self.current_level_index - 1),
-                                           self.score)
+                stat = statistic.Statistic(
+                    "{0}".format(self.current_level_index - 1),
+                    self.score)
                 stat.draw_stats()
             self.current_level = self.map.map
             self.field_width = len(self.current_level[0]) * 20 - 20
@@ -78,23 +81,23 @@ class Game:
         self.border_color = "#000e47"
         self.on_pause = False
         self.lose = False
-        self.screen = pg.display.set_mode(self.display)
-        self.bg = pg.Surface(self.display)
-        self.timer = pg.time.Clock()
+        self.screen = pygame.display.set_mode(self.display)
+        self.bg = pygame.Surface(self.display)
+        self.timer = pygame.time.Clock()
         self.ctrl_pressed = False
         self.ball_cant_drop = False
 
-    def start(self):
-        pg.init()
-        pg.display.set_caption("Arkanoid")
-        pg.mixer.music.load(self.music_files[self.current_level_index])
-        pg.mixer.music.set_volume(0.01)
-        pg.mixer.music.play(25)
-        self.bg.fill(pg.Color(self.background_color))
+    def draw(self):
+        pygame.init()
+        pygame.display.set_caption("Arkanoid")
+        pygame.mixer.music.load(self.music_files[self.current_level_index])
+        pygame.mixer.music.set_volume(0.01)
+        pygame.mixer.music.play(25)
+        self.bg.fill(pygame.Color(self.background_color))
         while True:
             self.timer.tick(200)
-            for e in pg.event.get():
-                if e.type == pg.QUIT:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
                     sys.exit()
                 self.handle_pressed_keys(e)
             if not self.on_pause:
@@ -103,53 +106,53 @@ class Game:
                 self.reflect_ball_by_wall()
                 self.reflect_ball_by_block()
                 self.draw_elements()
-                pg.display.update()
+                pygame.display.update()
             else:
                 self.draw_pause()
-                pg.display.update()
+                pygame.display.update()
 
     def handle_pressed_keys(self, e):
-        if e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
             sys.exit(0)
-        if e.type == pg.KEYDOWN and e.key == pg.K_a:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_a:
             self.platform.MOVING_LEFT = True
-        if e.type == pg.KEYDOWN and e.key == pg.K_d:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_d:
             self.platform.MOVING_RIGHT = True
-        if e.type == pg.KEYUP and e.key == pg.K_a:
+        if e.type == pygame.KEYUP and e.key == pygame.K_a:
             self.platform.MOVING_LEFT = False
-        if e.type == pg.KEYUP and e.key == pg.K_d:
+        if e.type == pygame.KEYUP and e.key == pygame.K_d:
             self.platform.MOVING_RIGHT = False
-        if e.type == pg.KEYDOWN and e.key == pg.K_b:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_b:
             self.execute_cheat("destroy block")
-        if e.type == pg.KEYDOWN and e.key == pg.K_n:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_n:
             self.execute_cheat("no lose")
-        if e.type == pg.KEYDOWN and e.key == pg.K_i:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_i:
             self.execute_cheat("decrease speed")
-        if e.type == pg.KEYDOWN and e.key == pg.K_o:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_o:
             self.execute_cheat("increase speed")
-        if e.type == pg.KEYDOWN and e.key == pg.K_r:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_r:
             self.ball.reincarnate()
 
-        if e.type == pg.KEYDOWN and e.key == pg.K_q:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_q:
             if self.on_pause:
                 self.on_pause = False
             else:
                 self.on_pause = True
-        if e.type == pg.KEYDOWN and e.key == pg.K_LCTRL:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_LCTRL:
             self.ctrl_pressed = True
-        if e.type == pg.KEYUP and e.key == pg.K_LCTRL:
+        if e.type == pygame.KEYUP and e.key == pygame.K_LCTRL:
             self.ctrl_pressed = False
-        if e.type == pg.KEYDOWN and e.key == pg.K_s:
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_s:
             if self.ctrl_pressed:
                 self.save_game()
-        if e.type == pg.KEYDOWN and e.key == pg.K_KP_MINUS:
-            volume = pg.mixer.music.get_volume()
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_KP_MINUS:
+            volume = pygame.mixer.music.get_volume()
             volume -= 0.01
-            pg.mixer.music.set_volume(volume)
-        if e.type == pg.KEYDOWN and e.key == pg.K_KP_PLUS:
-            volume = pg.mixer.music.get_volume()
+            pygame.mixer.music.set_volume(volume)
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_KP_PLUS:
+            volume = pygame.mixer.music.get_volume()
             volume += 0.01
-            pg.mixer.music.set_volume(volume)
+            pygame.mixer.music.set_volume(volume)
 
     def save_game(self):
         game = str(self.current_level_index) + ";"
@@ -159,7 +162,7 @@ class Game:
         game += str(self.platform.LEFT_COORD) + ";"
         game += str(self.platform.WIDTH) + ";"
         game += str(self.ball.x) + ',' + str(self.ball.y) + ',' + \
-                str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ";"
+            str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ";"
         for block in self.blocks:
             game += str(block.x) + ',' + str(block.y) + ',' + \
                     str(block.strength) + ";"
@@ -211,7 +214,7 @@ class Game:
                 self.score -= int(self.score // 5)
                 self.life -= 1
                 if self.life == 0:
-                    pg.mixer.music.stop()
+                    pygame.mixer.music.stop()
                     stats = statistic.Statistic(
                         str(self.current_level_index - 1), self.score)
                     stats.draw_stats()
@@ -237,7 +240,8 @@ class Game:
             else:
                 angle = (pos / middle) - 1
                 self.ball.speed[0] = angle
-            self.ball.speed[1] = -math.sqrt(2 - math.pow(self.ball.speed[0], 2))
+            self.ball.speed[1] = \
+                -math.sqrt(2 - math.pow(self.ball.speed[0], 2))
 
     def reflect_ball_by_block(self):
         for block in self.blocks:
@@ -268,9 +272,9 @@ class Game:
 
     def check_win(self):
         if len(self.blocks) == 0:
-            pg.mixer.music.stop()
+            pygame.mixer.music.stop()
             g = Game(self.current_level_index + 1, self.score, self.life + 1)
-            g.start()
+            g.draw()
             self.timer = None
 
     def draw_elements(self):
@@ -280,25 +284,26 @@ class Game:
         for row in self.current_level:
             for col in row:
                 if col == "B":
-                    pf = pg.Surface((20, 20))
-                    pf.fill(pg.Color(self.border_color))
+                    pf = pygame.Surface((20, 20))
+                    pf.fill(pygame.Color(self.border_color))
                     self.screen.blit(pf, (x, y))
                 x += 20
             y += 20
             x = 0
         for block in self.blocks:
             block.draw(self.screen)
-        pf = pg.Surface((20, 20))
-        pf.fill(pg.Color(self.ball.color))
+        pf = pygame.Surface((20, 20))
+        pf.fill(pygame.Color(self.ball.color))
         self.screen.blit(pf, (self.ball.x - 10, self.ball.y - 10))
         if self.ball_cant_drop:
-            pf = pg.Surface((self.field_width - 40, 2))
-            pf.fill(pg.Color(255, 255, 0))
+            pf = pygame.Surface((self.field_width - 40, 2))
+            pf.fill(pygame.Color("#ffff00"))
             self.screen.blit(pf, (20, self.win_height - 40))
 
-        font = pg.font.Font(None, 25)
+        font = pygame.font.Font(None, 25)
         text = font.render("Level: {0}"
-                           .format(self.current_level_index), True, (255, 255, 255))
+                           .format(self.current_level_index),
+                           True, (255, 255, 255))
         self.screen.blit(text, [self.win_width - 140, 15])
         text = font.render("Score: {0}"
                            .format(self.score), True, (255, 255, 255))
@@ -315,6 +320,7 @@ class Game:
             t = "Final score: {0}".format(self.score)
         else:
             t = "Game paused"
-        font = pg.font.Font(None, 45)
+        font = pygame.font.Font(None, 45)
         text = font.render(t, True, (255, 0, 0))
-        self.screen.blit(text, [self.field_width // 2 - 60, self.win_height // 2])
+        self.screen.blit(text, [self.field_width // 2 - 60,
+                                self.win_height // 2])
