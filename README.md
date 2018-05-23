@@ -11,7 +11,7 @@
 -----
   1. Установленный интерпретатор языка Python 3.6
 
-     [python.org](python.org)
+     [python.org](http://python.org)
 
   2. Установленный модуль PyGame
 
