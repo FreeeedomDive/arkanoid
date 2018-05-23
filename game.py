@@ -122,6 +122,13 @@ class Game:
             self.execute_cheat("decrease blocks")
         if e.type == pg.KEYDOWN and e.key == pg.K_n:
             self.execute_cheat("no lose")
+        if e.type == pg.KEYDOWN and e.key == pg.K_i:
+            self.execute_cheat("decrease speed")
+        if e.type == pg.KEYDOWN and e.key == pg.K_o:
+            self.execute_cheat("increase speed")
+        if e.type == pg.KEYDOWN and e.key == pg.K_r:
+            self.ball.reincarnate()
+
         if e.type == pg.KEYDOWN and e.key == pg.K_q:
             if self.on_pause:
                 self.on_pause = False
@@ -162,9 +169,9 @@ class Game:
         file.close()
 
     def execute_cheat(self, cheat):
-        if self.life == 1:
-            return
-        self.life -= 1
+        # if self.life == 1:
+        #     return
+        # self.life -= 1
         if cheat == "decrease blocks":
             for block in self.blocks:
                 if block.decrease_and_check_destroying():
@@ -174,6 +181,12 @@ class Game:
         if cheat == "no lose":
             self.ball_cant_drop = not self.ball_cant_drop
             print(self.ball_cant_drop)
+        if cheat == "decrease speed":
+            self.ball.speed[0] /= 2
+            self.ball.speed[1] /= 2
+        if cheat == "increase speed":
+            self.ball.speed[0] *= 2
+            self.ball.speed[1] *= 2
 
     def move_platform(self):
         if self.platform.LEFT_COORD >= 20 and self.platform.MOVING_LEFT:
