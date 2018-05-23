@@ -13,10 +13,14 @@
      python.org
   2. Установленный модуль PyGame
      python3 -m pip install -U pygame --user
-     
------     
+
+Запуск
+----- 
+
+cmd: ```arkanoid.py```
      
 Состав:
+-----
 
 * Изображения: ```Images/```
 
