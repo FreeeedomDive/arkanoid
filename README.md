@@ -10,9 +10,12 @@
 Требования:
 -----
   1. Установленный интерпретатор языка Python 3.6
-     python.org
+
+     [python.org](python.org)
+
   2. Установленный модуль PyGame
-     python3 -m pip install -U pygame --user
+
+     ```python3 -m pip install -U pygame --user```
 
 Запуск
 ----- 
