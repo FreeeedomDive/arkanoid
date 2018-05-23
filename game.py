@@ -204,9 +204,9 @@ class Game:
             self.reflect_ball_by_platform()
 
     def reflect_ball_by_platform(self):
-        self.multiplier = 1.0
         if self.ball.right < self.platform.LEFT_COORD or \
                 self.ball.left > self.platform.RIGHT_COORD:
+            self.multiplier = 1.0
             if not self.ball_cant_drop:
                 self.score -= int(self.score // 5)
                 self.life -= 1
@@ -220,6 +220,8 @@ class Game:
             else:
                 self.ball.speed[1] = -self.ball.speed[1]
             return
+        self.score += int(10 * self.multiplier)
+        self.multiplier = 1.0
         if self.ball.x < self.platform.LEFT_COORD:
             self.ball.speed[0] = -self.ball.basic_speed
             self.ball.speed[1] = -self.ball.speed[1]
