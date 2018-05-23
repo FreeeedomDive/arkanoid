@@ -8,7 +8,7 @@ class Ball:
         self.screen_width = screen_width
         if x == -1:
             self.x = random.randint(40, screen_width - 40)
-            self.start_y = self.y = screen_height - 50
+            self.start_y = self.y = screen_height - 60
             self.speed = [1, -1]
         else:
             self.x = x

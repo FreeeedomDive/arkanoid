@@ -6,18 +6,20 @@ import map as m
 import statistic
 import block as bl
 import math
+import random
 
 
 class Game:
-    music_files = {1: "Music/dayofthedead.mp3",
-                   2: "Music/whateverittakes.mp3",
-                   3: "Music/thunder.mp3",
-                   4: "Music/castle.mp3",
+    eps = 1
+    music_files = {1: "Music/allyouare.mp3",
+                   2: "Music/limelight.mp3",
+                   3: "Music/tripel.mp3",
+                   4: "Music/voiceless.mp3",
                    5: "Music/highscore.mp3",
                    6: "Music/monster.mp3",
-                   7: "Music/kokou.mp3",
+                   7: "Music/anthem.mp3",
                    8: "Music/ethereal.mp3",
-                   9: "Music/medal.mp3",
+                   9: "Music/mayday.mp3",
                    10: "Music/medal.mp3"}
 
     def __init__(self, id=1, score=0, life=3, f=None):
@@ -86,7 +88,7 @@ class Game:
         pg.init()
         pg.display.set_caption("Arkanoid")
         pg.mixer.music.load(self.music_files[self.current_level_index])
-        pg.mixer.music.set_volume(0.025)
+        pg.mixer.music.set_volume(0.01)
         pg.mixer.music.play(25)
         self.bg.fill(pg.Color(self.background_color))
         while True:
@@ -98,14 +100,13 @@ class Game:
             if not self.on_pause:
                 self.move_platform()
                 self.ball.move()
-                self.reflect_ball_by_wall2()
+                self.reflect_ball_by_wall()
                 self.reflect_ball_by_block()
                 self.draw_elements()
                 pg.display.update()
             else:
                 self.draw_pause()
                 pg.display.update()
-            # print(self.ball.speed[0], self.ball.speed[1], self.ball.x, self.ball.y)
 
     def handle_pressed_keys(self, e):
         if e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE:
@@ -119,7 +120,7 @@ class Game:
         if e.type == pg.KEYUP and e.key == pg.K_d:
             self.platform.MOVING_RIGHT = False
         if e.type == pg.KEYDOWN and e.key == pg.K_b:
-            self.execute_cheat("decrease blocks")
+            self.execute_cheat("destroy block")
         if e.type == pg.KEYDOWN and e.key == pg.K_n:
             self.execute_cheat("no lose")
         if e.type == pg.KEYDOWN and e.key == pg.K_i:
@@ -135,13 +136,11 @@ class Game:
             else:
                 self.on_pause = True
         if e.type == pg.KEYDOWN and e.key == pg.K_LCTRL:
-            print("pressed")
             self.ctrl_pressed = True
         if e.type == pg.KEYUP and e.key == pg.K_LCTRL:
             self.ctrl_pressed = False
         if e.type == pg.KEYDOWN and e.key == pg.K_s:
             if self.ctrl_pressed:
-                print("Saved")
                 self.save_game()
         if e.type == pg.KEYDOWN and e.key == pg.K_KP_MINUS:
             volume = pg.mixer.music.get_volume()
@@ -172,15 +171,12 @@ class Game:
         # if self.life == 1:
         #     return
         # self.life -= 1
-        if cheat == "decrease blocks":
-            for block in self.blocks:
-                if block.decrease_and_check_destroying():
-                    self.blocks.remove(block)
-                self.draw_elements()
-                self.check_win()
+        if cheat == "destroy block":
+            index = random.randint(0, len(self.blocks) - 1)
+            self.blocks.remove(self.blocks[index])
+            self.check_win()
         if cheat == "no lose":
             self.ball_cant_drop = not self.ball_cant_drop
-            print(self.ball_cant_drop)
         if cheat == "decrease speed":
             self.ball.speed[0] /= 2
             self.ball.speed[1] /= 2
@@ -196,49 +192,23 @@ class Game:
             self.platform.move(1)
 
     def reflect_ball_by_wall(self):
-        if self.ball.left == 20 or self.ball.right == self.field_width - 20:
-            self.ball.speed[0] = -self.ball.speed[0]
-        if self.ball.bottom == self.win_height - 40:
-            if self.platform.LEFT_COORD < self.ball.left < \
-                    self.platform.RIGHT_COORD or \
-                    self.platform.LEFT_COORD < self.ball.right < \
-                    self.platform.RIGHT_COORD:
-                self.ball.speed[1] = -self.ball.speed[1]
-                self.multiplier = 1.0
-            else:
-                if not self.ball_cant_drop:
-                    self.score -= int(self.score // 5)
-                    self.multiplier = 1.0
-                    self.life -= 1
-                    if self.life == 0:
-                        pg.mixer.music.stop()
-                        stats = statistic.Statistic(str(self.current_level_index - 1), self.score)
-                        stats.draw_stats()
-                    else:
-                        self.ball.reincarnate()
-                else:
-                    self.ball.speed[1] = -self.ball.speed[1]
-        if self.ball.top == 20:
-            self.ball.speed[1] = -self.ball.speed[1]
-
-    def reflect_ball_by_wall2(self):
-        if math.fabs(self.ball.left - 20) < 1 or \
-                math.fabs(self.ball.right - (self.field_width - 20)) < 1:
+        if math.fabs(self.ball.left - 20) < self.eps or \
+                math.fabs(self.ball.right -
+                          (self.field_width - 20)) < self.eps:
             self.ball.speed[0] = -self.ball.speed[0]
             return
-        if math.fabs(self.ball.top - 20) < 1:
+        if math.fabs(self.ball.top - 20) < self.eps:
             self.ball.speed[1] = -self.ball.speed[1]
             return
-        if math.fabs(self.ball.bottom - (self.win_height - 40)) < 1:
+        if math.fabs(self.ball.bottom - (self.win_height - 40)) < self.eps:
             self.reflect_ball_by_platform()
 
     def reflect_ball_by_platform(self):
-        print("platform")
+        self.multiplier = 1.0
         if self.ball.right < self.platform.LEFT_COORD or \
                 self.ball.left > self.platform.RIGHT_COORD:
             if not self.ball_cant_drop:
                 self.score -= int(self.score // 5)
-                self.multiplier = 1.0
                 self.life -= 1
                 if self.life == 0:
                     pg.mixer.music.stop()
@@ -257,22 +227,20 @@ class Game:
             self.ball.speed[0] = self.ball.basic_speed
             self.ball.speed[1] = -self.ball.speed[1]
         else:
-            self.ball.speed[1] = -self.ball.speed[1]
             middle = self.platform.WIDTH // 2
             pos = self.ball.x - self.platform.LEFT_COORD
             if pos < middle:
                 angle = -1 + (pos / middle)
-                print(angle)
                 self.ball.speed[0] = angle
             else:
-                angle = 1 - (middle / pos)
-                print(angle)
+                angle = (pos / middle) - 1
                 self.ball.speed[0] = angle
+            self.ball.speed[1] = -math.sqrt(2 - math.pow(self.ball.speed[0], 2))
 
     def reflect_ball_by_block(self):
         for block in self.blocks:
-            if math.fabs(self.ball.top - block.bottom) < 1 or \
-                    math.fabs(self.ball.bottom - block.top) < 1:
+            if math.fabs(self.ball.top - block.bottom) < self.eps or \
+                    math.fabs(self.ball.bottom - block.top) < self.eps:
                 if block.left <= self.ball.left <= block.right or \
                         block.left <= self.ball.right <= block.right:
                     self.ball.speed[1] = -self.ball.speed[1]
@@ -283,8 +251,8 @@ class Game:
                     self.multiplier += 0.1
                     self.check_win()
                     return
-            elif math.fabs(self.ball.left - block.right) < 1 or \
-                    math.fabs(self.ball.right - block.left) < 1:
+            elif math.fabs(self.ball.left - block.right) < self.eps or \
+                    math.fabs(self.ball.right - block.left) < self.eps:
                 if block.top <= self.ball.top <= block.bottom or \
                         block.top <= self.ball.bottom <= block.bottom:
                     self.ball.speed[0] = -self.ball.speed[0]
@@ -321,6 +289,11 @@ class Game:
         pf = pg.Surface((20, 20))
         pf.fill(pg.Color(self.ball.color))
         self.screen.blit(pf, (self.ball.x - 10, self.ball.y - 10))
+        if self.ball_cant_drop:
+            pf = pg.Surface((self.field_width - 40, 2))
+            pf.fill(pg.Color(255, 255, 0))
+            self.screen.blit(pf, (20, self.win_height - 40))
+
         font = pg.font.Font(None, 25)
         text = font.render("Level: {0}"
                            .format(self.current_level_index), True, (255, 255, 255))

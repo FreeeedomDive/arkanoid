@@ -6,7 +6,7 @@ import sys
 class Menu:
 
     def __init__(self):
-        self.display = (320, 240)
+        self.display = (220, 120)
         self.screen = pygame.display.set_mode(self.display)
         self.bg = pygame.Surface(self.display)
         self.background_color = "#00ff40"

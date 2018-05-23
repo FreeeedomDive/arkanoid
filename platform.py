@@ -9,7 +9,7 @@ class Platform:
         self.COLOR = "#789ABC"
         self.HEIGHT = 20
         if width == -1:
-            self.WIDTH = screen_width / 5
+            self.WIDTH = screen_width / 4
         else:
             self.WIDTH = width
         if left == -1:
