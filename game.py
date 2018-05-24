@@ -7,10 +7,12 @@ import statistic
 import block as bl
 import math
 import random
+import menu
+import datetime
 
 
 class Game:
-    eps = 1
+    eps = 1.0
     music_files = {1: "Music/allyouare.mp3",
                    2: "Music/limelight.mp3",
                    3: "Music/tripel.mp3",
@@ -22,8 +24,23 @@ class Game:
                    9: "Music/mayday.mp3",
                    10: "Music/medal.mp3"}
 
-    def __init__(self, id=1, score=0, life=3, f=None):
-        if f is not None:
+    def __init__(self, id=1, score=0, life=3, f=None, map=None):
+        self.custom = False
+        if map is not None:
+            self.current_level_index = "Custom.{0}".format(map)
+            self.custom = True
+            self.life = life
+            self.score = score
+            self.multiplier = 1.0
+            self.map = m.Map(map)
+            self.current_level = self.map.map
+            self.field_width = len(self.current_level[0]) * 20 - 20
+            self.win_width = self.field_width + 150
+            self.win_height = len(self.current_level) * 20
+            self.blocks = self.map.blocks
+            self.platform = pl.Platform(self.field_width)
+            self.ball = b.Ball(self.field_width, self.win_height)
+        elif f is not None:
             args = f.split(";")
             self.current_level_index = int(args[0])
             self.score = int(args[1])
@@ -87,12 +104,14 @@ class Game:
         self.ctrl_pressed = False
         self.ball_cant_drop = False
 
-    def draw(self):
+    def start(self):
         pygame.init()
+        pygame.mouse.set_visible(False)
         pygame.display.set_caption("Arkanoid")
-        pygame.mixer.music.load(self.music_files[self.current_level_index])
-        pygame.mixer.music.set_volume(0.01)
-        pygame.mixer.music.play(25)
+        if not self.custom:
+            pygame.mixer.music.load(self.music_files[self.current_level_index])
+            pygame.mixer.music.set_volume(0.00)
+            pygame.mixer.music.play(25)
         self.bg.fill(pygame.Color(self.background_color))
         while True:
             self.timer.tick(200)
@@ -113,7 +132,8 @@ class Game:
 
     def handle_pressed_keys(self, e):
         if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-            sys.exit(0)
+            pygame.mixer.music.stop()
+            menu.Menu()
         if e.type == pygame.KEYDOWN and e.key == pygame.K_a:
             self.platform.MOVING_LEFT = True
         if e.type == pygame.KEYDOWN and e.key == pygame.K_d:
@@ -132,7 +152,7 @@ class Game:
             self.execute_cheat("increase speed")
         if e.type == pygame.KEYDOWN and e.key == pygame.K_r:
             self.ball.reincarnate()
-
+            self.eps = 1.0
         if e.type == pygame.KEYDOWN and e.key == pygame.K_q:
             if self.on_pause:
                 self.on_pause = False
@@ -155,6 +175,10 @@ class Game:
             pygame.mixer.music.set_volume(volume)
 
     def save_game(self):
+        d = datetime.datetime.now()
+        filename = "save-{0}-{1}-{2}-{3}-{4}-{5}"\
+            .format(d.year, d.month, d.day, d.hour,
+                    d.minute, d.second)
         game = str(self.current_level_index) + ";"
         game += str(self.score) + ";"
         game += str(self.life) + ";"
@@ -166,7 +190,7 @@ class Game:
         for block in self.blocks:
             game += str(block.x) + ',' + str(block.y) + ',' + \
                     str(block.strength) + ";"
-        file = open("saved.txt", 'w')
+        file = open("Saves/{0}.txt".format(filename), 'w')
         file.write(game)
         file.close()
 
@@ -183,9 +207,11 @@ class Game:
         if cheat == "decrease speed":
             self.ball.speed[0] /= 2
             self.ball.speed[1] /= 2
+            self.eps /= 2
         if cheat == "increase speed":
             self.ball.speed[0] *= 2
             self.ball.speed[1] *= 2
+            self.eps *= 2
 
     def move_platform(self):
         if self.platform.LEFT_COORD >= 20 and self.platform.MOVING_LEFT:
@@ -211,13 +237,16 @@ class Game:
                 self.ball.left > self.platform.RIGHT_COORD:
             self.multiplier = 1.0
             if not self.ball_cant_drop:
+                self.eps = 1.0
                 self.score -= int(self.score // 5)
                 self.life -= 1
                 if self.life == 0:
                     pygame.mixer.music.stop()
-                    stats = statistic.Statistic(
-                        str(self.current_level_index - 1), self.score)
-                    stats.draw_stats()
+                    if not self.custom:
+                        stats = statistic.Statistic(
+                            str(self.current_level_index - 1), self.score)
+                        stats.draw_stats()
+                    menu.Menu()
                 else:
                     self.ball.reincarnate()
             else:
@@ -227,10 +256,10 @@ class Game:
         self.multiplier = 1.0
         if self.ball.x < self.platform.LEFT_COORD:
             self.ball.speed[0] = -self.ball.basic_speed
-            self.ball.speed[1] = -self.ball.speed[1]
+            self.ball.speed[1] = -self.ball.basic_speed
         elif self.ball.x > self.platform.RIGHT_COORD:
             self.ball.speed[0] = self.ball.basic_speed
-            self.ball.speed[1] = -self.ball.speed[1]
+            self.ball.speed[1] = -self.ball.basic_speed
         else:
             middle = self.platform.WIDTH // 2
             pos = self.ball.x - self.platform.LEFT_COORD
@@ -242,6 +271,7 @@ class Game:
                 self.ball.speed[0] = angle
             self.ball.speed[1] = \
                 -math.sqrt(2 - math.pow(self.ball.speed[0], 2))
+        print(self.ball.speed)
 
     def reflect_ball_by_block(self):
         for block in self.blocks:
@@ -273,9 +303,11 @@ class Game:
     def check_win(self):
         if len(self.blocks) == 0:
             pygame.mixer.music.stop()
-            g = Game(self.current_level_index + 1, self.score, self.life + 1)
-            g.draw()
-            self.timer = None
+            if not self.custom:
+                g = Game(self.current_level_index + 1, self.score, self.life + 1)
+                g.start()
+                self.timer = None
+            menu.Menu()
 
     def draw_elements(self):
         self.screen.blit(self.bg, (0, 0))
@@ -301,9 +333,13 @@ class Game:
             self.screen.blit(pf, (20, self.win_height - 40))
 
         font = pygame.font.Font(None, 25)
-        text = font.render("Level: {0}"
-                           .format(self.current_level_index),
-                           True, (255, 255, 255))
+        lvl = ""
+        if self.custom:
+            lvl = "Level: Custom"
+        else:
+            lvl = "Level: {0}".format(self.current_level_index)
+
+        text = font.render(lvl, True, (255, 255, 255))
         self.screen.blit(text, [self.win_width - 140, 15])
         text = font.render("Score: {0}"
                            .format(self.score), True, (255, 255, 255))

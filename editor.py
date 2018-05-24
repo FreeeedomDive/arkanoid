@@ -1,5 +1,7 @@
 import pygame
 import sys
+import random
+import menu
 
 
 class Editor:
@@ -10,6 +12,7 @@ class Editor:
               4:  pygame.image.load("Images/block4.png"),
               5:  pygame.image.load("Images/block5.png"),
               10: pygame.image.load("Images/cursor.png")}
+    alph = "abcdefghijklmnopqrstuvwxyz"
 
     def __init__(self, width, height):
         self.width = width
@@ -32,6 +35,7 @@ class Editor:
         self.screen = pygame.display.set_mode(self.display)
         self.bg = pygame.Surface(self.display)
         self.timer = pygame.time.Clock()
+        self.ctrl_pressed = False
         self.start()
 
     def start(self):
@@ -48,7 +52,7 @@ class Editor:
         if e.type == pygame.QUIT:
             sys.exit()
         if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-            sys.exit()
+            menu.Menu()
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_a:
             if 0 < self.cursor[1]:
                 self.cursor[1] -= 1
@@ -68,7 +72,17 @@ class Editor:
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_e:
             x = self.cursor[0]
             y = self.cursor[1]
-            self.game_objects[x][y] = self.selected
+            if self.selected == '0':
+                self.game_objects[x][y] = ' '
+            else:
+                self.game_objects[x][y] = self.selected
+        elif e.type == pygame.KEYDOWN and e.key == pygame.K_LCTRL:
+            self.ctrl_pressed = True
+        elif e.type == pygame.KEYUP and e.key == pygame.K_LCTRL:
+            self.ctrl_pressed = False
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_s:
+            if self.ctrl_pressed:
+                self.save_map()
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_1:
             self.selected = "1"
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_2:
@@ -79,6 +93,33 @@ class Editor:
             self.selected = "4"
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_5:
             self.selected = "5"
+        elif e.type == pygame.KEYDOWN and e.key == pygame.K_0:
+            self.selected = "0"
+
+    def save_map(self):
+        l = random.randint(6, 12)
+        name = ""
+        for i in range(0, l):
+            name += self.alph[random.randint(0, len(self.alph) - 1)]
+        map = ""
+        for i in range(0, self.width + 2):
+            map += "B"
+        for i in range(0, len(self.game_objects)):
+            map += "\nB"
+            for j in range(0, len(self.game_objects[i])):
+                map += self.game_objects[i][j]
+            map += "B"
+        print(map)
+        for i in range(0, 8):
+            map += "\nB"
+            for j in range(0, self.width):
+                map += " "
+            map += "B"
+        print(map)
+        file = open("CreatedLevels/{0}.txt".format(name), 'w')
+        file.write(map)
+        file.close()
+        menu.Menu()
 
     def draw(self):
         self.screen.blit(self.bg, (0, 0))

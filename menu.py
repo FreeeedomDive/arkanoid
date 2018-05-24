@@ -2,6 +2,8 @@ import pygame
 import game
 import sys
 import editorInfo
+import select_custom_level
+import select_save
 
 
 class Menu:
@@ -45,11 +47,12 @@ class Menu:
             sys.exit(0)
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_1:
             g = game.Game(id=1, score=0, life=3)
-            g.draw()
+            g.start()
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_2:
-            saved = open("saved.txt", 'r')
-            g = game.Game(f=saved.read())
-            saved.close()
-            g.draw()
+            select_save.SaveSelector()
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_3:
             editorInfo.EditorMapInfo()
+        elif e.type == pygame.KEYDOWN and e.key == pygame.K_4:
+            select_custom_level.CustomLevelSelector()
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
+            sys.exit(0)

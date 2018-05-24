@@ -1,6 +1,7 @@
 import pygame
 import sys
 import editor
+import menu
 
 
 class EditorMapInfo:
@@ -28,7 +29,7 @@ class EditorMapInfo:
                 if e.type == pygame.QUIT:
                     sys.exit()
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-                    sys.exit()
+                    menu.Menu()
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT:
                     self.active -= 1
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT:
@@ -36,7 +37,8 @@ class EditorMapInfo:
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_RETURN:
                     self.width = int(self.width_text)
                     self.height = int(self.height_text)
-                    ed = editor.Editor(self.width, self.height)
+                    if 5 <= self.width <= 25 and 5 <= self.height <= 25:
+                        ed = editor.Editor(self.width, self.height)
                 elif e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_BACKSPACE:
                         if self.active % 2 == 1:
@@ -52,13 +54,11 @@ class EditorMapInfo:
             font = pygame.font.Font(None, 25)
             text = font.render("Input count of blocks in field", True, (255, 255, 255))
             self.screen.blit(text, [10, 15])
-            text = font.render("Width", True, (255, 255, 255))
+            text = font.render("min = 5, max = 25", True, (255, 255, 255))
             self.screen.blit(text, [10, 40])
-            text = font.render("max=20", True, (255, 255, 255))
+            text = font.render("Width", True, (255, 255, 255))
             self.screen.blit(text, [10, 70])
             text = font.render("Height", True, (255, 255, 255))
-            self.screen.blit(text, [100, 40])
-            text = font.render("max=20", True, (255, 255, 255))
             self.screen.blit(text, [100, 70])
             if self.active % 2 == 1:
                 font = pygame.font.Font(None, 40)
@@ -93,7 +93,7 @@ class EditorMapInfo:
 
             try:
                 self.width = int(self.width_text)
-                if not 0 < self.width <= 20:
+                if not 5 <= self.width <= 25:
                     pf = pygame.Surface((80, 50))
                     pf.fill(pygame.Color("#ff0000"))
                     self.screen.blit(pf, (10, 100))
@@ -108,7 +108,7 @@ class EditorMapInfo:
 
             try:
                 self.height = int(self.height_text)
-                if not 0 < self.height <= 20:
+                if not 5 <= self.height <= 25:
                     pf = pygame.Surface((80, 50))
                     pf.fill(pygame.Color("#ff0000"))
                     self.screen.blit(pf, (100, 100))

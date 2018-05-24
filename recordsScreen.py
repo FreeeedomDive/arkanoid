@@ -1,6 +1,7 @@
 import pygame
 import player
 import sys
+import menu
 
 
 class RecordsScreen:
@@ -48,5 +49,5 @@ class RecordsScreen:
                 if e.type == pygame.QUIT:
                     sys.exit()
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-                    sys.exit()
+                    menu.Menu()
             pygame.display.update()
