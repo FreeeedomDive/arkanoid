@@ -42,18 +42,25 @@ class Game:
             self.ball = b.Ball(self.field_width, self.win_height)
         elif f is not None:
             args = f.split(";")
-            self.current_level_index = int(args[0])
+            print(args[0][:6])
+            if args[0][:6] == "Custom":
+                self.custom = True
+            if not self.custom:
+                self.current_level_index = int(args[0])
+                try:
+                    self.map = m.Map("Levels/level" +
+                                     str(self.current_level_index) + ".txt")
+                except:
+                    stat = statistic.Statistic("{0}"
+                                               .format(self.current_level_index),
+                                               self.score)
+                    stat.draw_stats()
+            else:
+                self.map = m.Map(args[0][7:])
             self.score = int(args[1])
             self.life = int(args[2])
             self.multiplier = float(args[3])
-            try:
-                self.map = m.Map("Levels/level" +
-                                 str(self.current_level_index) + ".txt")
-            except:
-                stat = statistic.Statistic("{0}"
-                                           .format(self.current_level_index),
-                                           self.score)
-                stat.draw_stats()
+
             self.current_level = self.map.map
             self.field_width = len(self.current_level[0]) * 20 - 20
             self.win_width = self.field_width + 150

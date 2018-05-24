@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 import game
+import menu
 
 
 class SaveSelector:
