@@ -1,7 +1,7 @@
 import pygame
 import sys
 import player
-import recordsScreen
+import records_screen
 
 
 class Statistic:
@@ -51,7 +51,7 @@ class Statistic:
                         f.write(str(p) + "\n")
                     index = self.records.index(pl)
                     f.close()
-                    r = recordsScreen.RecordsScreen(index)
+                    r = records_screen.RecordsScreen(index)
                 if e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_BACKSPACE:
                         name = name[:-1]

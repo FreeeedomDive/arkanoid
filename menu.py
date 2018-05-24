@@ -1,7 +1,7 @@
 import pygame
 import game
 import sys
-import editorInfo
+import editor_info
 import select_custom_level
 import select_save
 
@@ -51,7 +51,7 @@ class Menu:
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_2:
             select_save.SaveSelector()
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_3:
-            editorInfo.EditorMapInfo()
+            editor_info.EditorMapInfo()
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_4:
             select_custom_level.CustomLevelSelector()
         if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
