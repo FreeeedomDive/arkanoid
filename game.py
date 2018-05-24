@@ -13,7 +13,7 @@ import datetime
 
 class Game:
     eps = 1.0
-    music_files = {1: "Music/allyouare.mp3",
+    music_files = {1: "Music/megalovania.mp3",
                    2: "Music/limelight.mp3",
                    3: "Music/tripel.mp3",
                    4: "Music/voiceless.mp3",
