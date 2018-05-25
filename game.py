@@ -72,7 +72,9 @@ class Game:
             self.ball = b.Ball(self.field_width, self.win_height,
                                float(b_args[0]), float(b_args[1]),
                                float(b_args[2]),
-                               float(b_args[3]), float(self.win_height - 50))
+                               float(b_args[3]),
+                               float(self.win_height - 50),
+                               float(b_args[4]))
             self.blocks = []
             for i in range(7, len(args)):
                 if args[i] == '':
@@ -196,7 +198,7 @@ class Game:
         game += str(self.platform.LEFT_COORD) + ";"
         game += str(self.platform.WIDTH) + ";"
         game += str(self.ball.x) + ',' + str(self.ball.y) + ',' + \
-            str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ";"
+            str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ',' + str(self.ball.power) + ";"
         for block in self.blocks:
             game += str(block.x) + ',' + str(block.y) + ',' + \
                     str(block.strength) + ";"
