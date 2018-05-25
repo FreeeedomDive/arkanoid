@@ -4,17 +4,19 @@ import random
 class Ball:
 
     def __init__(self, screen_width, screen_height, x=-1, y=-1, sp0=-1,
-                 sp1=-1, start=-1):
+                 sp1=-1, start=-1, power=1):
         self.screen_width = screen_width
         if x == -1:
             self.x = random.randint(40, screen_width - 40)
             self.start_y = self.y = screen_height - 60
             self.speed = [1, -1]
+            self.power = 1
         else:
             self.x = x
             self.y = y
             self.speed = [sp0, sp1]
             self.start_y = start
+            self.power = power
         self.basic_speed = 1
         self.top = self.y - 10
         self.bottom = self.y + 10

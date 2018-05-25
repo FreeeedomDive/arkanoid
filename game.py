@@ -9,6 +9,7 @@ import math
 import random
 import menu
 import datetime
+import bonus
 
 
 class Game:
@@ -100,6 +101,7 @@ class Game:
             self.blocks = self.map.blocks
             self.platform = pl.Platform(self.field_width)
             self.ball = b.Ball(self.field_width, self.win_height)
+        self.active_bonuses = []
         self.display = (self.win_width, self.win_height)
         self.background_color = "#001a82"
         self.border_color = "#000e47"
@@ -131,6 +133,7 @@ class Game:
                 self.ball.move()
                 self.reflect_ball_by_wall()
                 self.reflect_ball_by_block()
+                self.move_bonuses()
                 self.draw_elements()
                 pygame.display.update()
             else:
@@ -288,8 +291,21 @@ class Game:
                         block.left <= self.ball.right <= block.right:
                     self.ball.speed[1] = -self.ball.speed[1]
                     self.score += int(20 * self.multiplier)
-                    if block.decrease_and_check_destroying():
+                    if block.decrease_and_check_destroying(self.ball.power):
                         self.score += int(100 * self.multiplier)
+                        if block.bonus is not None:
+                            if block.bonus == "destroy_line":
+                                destr = []
+                                for b in self.blocks:
+                                    if b.y == block.y and b != block:
+                                        destr.append(b)
+                                self.score += len(destr) * 150
+                                for d in destr:
+                                    self.blocks.remove(d)
+                                destr.clear()
+                            else:
+                                bon = bonus.Bonus(block.bonus, block.left, block.top)
+                                self.active_bonuses.append(bon)
                         self.blocks.remove(block)
                     self.multiplier += 0.1
                     self.check_win()
@@ -300,12 +316,42 @@ class Game:
                         block.top <= self.ball.bottom <= block.bottom:
                     self.ball.speed[0] = -self.ball.speed[0]
                     self.score += int(20 * self.multiplier)
-                    if block.decrease_and_check_destroying():
+                    if block.decrease_and_check_destroying(self.ball.power):
                         self.score += int(100 * self.multiplier)
+                        if block.bonus is not None:
+                            if block.bonus == "destroy_line":
+                                destr = []
+                                for b in self.blocks:
+                                    if b.y == block.y and b != block:
+                                        destr.append(b)
+                                self.score += len(destr) * 150
+                                for d in destr:
+                                    self.blocks.remove(d)
+                                destr.clear()
+                            else:
+                                bon = bonus.Bonus(block.bonus, block.left, block.top)
+                                self.active_bonuses.append(bon)
                         self.blocks.remove(block)
                     self.multiplier += 0.1
                     self.check_win()
                     return
+
+    def move_bonuses(self):
+        if len(self.active_bonuses) > 0:
+            for bon in self.active_bonuses:
+                bon.y += bon.speed[1]
+                if bon.y == self.win_height - 40:
+                    if self.platform.LEFT_COORD <= bon.x <= self.platform.RIGHT_COORD:
+                        if bon.name == "powerup":
+                            self.ball.power *= 2
+                        if bon.name == "platform_more":
+                            self.platform.WIDTH = self.platform.WIDTH // 2 * 3
+                            self.platform.RIGHT_COORD = self.platform.LEFT_COORD + self.platform.WIDTH
+                        if bon.name == "platform_less":
+                            self.platform.WIDTH //= 2
+                            self.platform.RIGHT_COORD = self.platform.LEFT_COORD + self.platform.WIDTH
+                    else:
+                        self.active_bonuses.remove(bon)
 
     def check_win(self):
         if len(self.blocks) == 0:
@@ -334,6 +380,9 @@ class Game:
         pf = pygame.Surface((20, 20))
         pf.fill(pygame.Color(self.ball.color))
         self.screen.blit(pf, (self.ball.x - 10, self.ball.y - 10))
+        if len(self.active_bonuses) > 0:
+            for bon in self.active_bonuses:
+                self.screen.blit(bon.image, (bon.x, bon.y))
         if self.ball_cant_drop:
             pf = pygame.Surface((self.field_width - 40, 2))
             pf.fill(pygame.Color("#ffff00"))

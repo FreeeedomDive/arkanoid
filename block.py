@@ -1,11 +1,27 @@
 import pygame as pg
+import random
 
 
 class Block:
 
-    def __init__(self, x, y, str):
+    bonuses = [
+        "powerup",
+        "platform_more",
+        "platform_less",
+        "destroy_line"
+    ]
+
+    def __init__(self, x, y, str, bonus=None):
         self.x = x
         self.y = y
+        if bonus is None:
+            chance = random.randint(0, 14)
+            if chance == 10:
+                self.bonus = self.bonuses[random.randint(0, len(self.bonuses) - 1)]
+            else:
+                self.bonus = None
+        else:
+            self.bonus = bonus
         self.top = self.y - 10
         self.bottom = self.y + 10
         self.left = self.x - 10
@@ -20,9 +36,9 @@ class Block:
         self.left = self.x - 10
         self.right = self.x + 10
 
-    def decrease_and_check_destroying(self):
-        self.strength -= 1
-        if self.strength == 0:
+    def decrease_and_check_destroying(self, power):
+        self.strength -= power
+        if self.strength <= 0:
             return True
         else:
             file_name = "Images/block{0}.png".format(self.strength)
