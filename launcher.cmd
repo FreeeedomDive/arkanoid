@@ -1,4 +1,3 @@
 @echo off
-python main.py
-echo Gege
+python arkanoid.py
 pause
