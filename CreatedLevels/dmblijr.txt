@@ -1,0 +1,24 @@
+BBBBBBBBBBBB
+B          B
+B          B
+B 33333333 B
+B          B
+B  444444  B
+B          B
+B 33333333 B
+B          B
+B  444444  B
+B          B
+B          B
+B1 1 1 1 1 B
+B 1 1 1 1 1B
+B1 1 1 1 1 B
+B 1 1 1 1 1B
+B          B
+B          B
+B          B
+B          B
+B          B
+B          B
+B          B
+B          B

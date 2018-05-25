@@ -52,7 +52,8 @@ class EditorMapInfo:
                             self.height_text += e.unicode
             self.screen.blit(self.bg, (0, 0))
             font = pygame.font.Font(None, 25)
-            text = font.render("Input count of blocks in field", True, (255, 255, 255))
+            text = font.render("Input count of blocks in field",
+                               True, (255, 255, 255))
             self.screen.blit(text, [10, 15])
             text = font.render("min = 5, max = 25", True, (255, 255, 255))
             self.screen.blit(text, [10, 40])

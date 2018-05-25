@@ -43,7 +43,6 @@ class Game:
             self.ball = b.Ball(self.field_width, self.win_height)
         elif f is not None:
             args = f.split(";")
-            print(args[0][:6])
             if args[0][:6] == "Custom":
                 self.custom = True
             if not self.custom:
@@ -53,7 +52,8 @@ class Game:
                                      str(self.current_level_index) + ".txt")
                 except:
                     stat = statistic.Statistic("{0}"
-                                               .format(self.current_level_index),
+                                               .format
+                                               (self.current_level_index),
                                                self.score)
                     stat.draw_stats()
             else:
@@ -188,7 +188,7 @@ class Game:
 
     def save_game(self):
         d = datetime.datetime.now()
-        filename = "save-{0}-{1}-{2}-{3}-{4}-{5}"\
+        filename = "save-{0}-{1}-{2}-{3}-{4}-{5}" \
             .format(d.year, d.month, d.day, d.hour,
                     d.minute, d.second)
         game = str(self.current_level_index) + ";"
@@ -198,7 +198,9 @@ class Game:
         game += str(self.platform.LEFT_COORD) + ";"
         game += str(self.platform.WIDTH) + ";"
         game += str(self.ball.x) + ',' + str(self.ball.y) + ',' + \
-            str(self.ball.speed[0]) + ',' + str(self.ball.speed[1]) + ',' + str(self.ball.power) + ";"
+            str(self.ball.speed[0]) + ',' + \
+            str(self.ball.speed[1]) + ',' + \
+            str(self.ball.power) + ";"
         for block in self.blocks:
             game += str(block.x) + ',' + str(block.y) + ',' + \
                     str(block.strength) + ";"
@@ -306,7 +308,8 @@ class Game:
                                     self.blocks.remove(d)
                                 destr.clear()
                             else:
-                                bon = bonus.Bonus(block.bonus, block.left, block.top)
+                                bon = bonus.Bonus(
+                                    block.bonus, block.left, block.top)
                                 self.active_bonuses.append(bon)
                         self.blocks.remove(block)
                     self.multiplier += 0.1
@@ -331,7 +334,8 @@ class Game:
                                     self.blocks.remove(d)
                                 destr.clear()
                             else:
-                                bon = bonus.Bonus(block.bonus, block.left, block.top)
+                                bon = bonus.Bonus(
+                                    block.bonus, block.left, block.top)
                                 self.active_bonuses.append(bon)
                         self.blocks.remove(block)
                     self.multiplier += 0.1
@@ -343,15 +347,18 @@ class Game:
             for bon in self.active_bonuses:
                 bon.y += bon.speed[1]
                 if bon.y == self.win_height - 40:
-                    if self.platform.LEFT_COORD <= bon.x <= self.platform.RIGHT_COORD:
+                    if self.platform.LEFT_COORD <= bon.x <= \
+                            self.platform.RIGHT_COORD:
                         if bon.name == "powerup":
                             self.ball.power *= 2
                         if bon.name == "platform_more":
                             self.platform.WIDTH = self.platform.WIDTH // 2 * 3
-                            self.platform.RIGHT_COORD = self.platform.LEFT_COORD + self.platform.WIDTH
+                            self.platform.RIGHT_COORD = \
+                                self.platform.LEFT_COORD + self.platform.WIDTH
                         if bon.name == "platform_less":
                             self.platform.WIDTH //= 2
-                            self.platform.RIGHT_COORD = self.platform.LEFT_COORD + self.platform.WIDTH
+                            self.platform.RIGHT_COORD = \
+                                self.platform.LEFT_COORD + self.platform.WIDTH
                     else:
                         self.active_bonuses.remove(bon)
 
@@ -359,7 +366,8 @@ class Game:
         if len(self.blocks) == 0:
             pygame.mixer.music.stop()
             if not self.custom:
-                g = Game(self.current_level_index + 1, self.score, self.life + 1)
+                g = Game(self.current_level_index + 1,
+                         self.score, self.life + 1)
                 g.start()
                 self.timer = None
             menu.Menu()

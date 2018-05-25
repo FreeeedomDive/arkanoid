@@ -17,7 +17,8 @@ class Block:
         if bonus is None:
             chance = random.randint(0, 14)
             if chance == 10:
-                self.bonus = self.bonuses[random.randint(0, len(self.bonuses) - 1)]
+                self.bonus = \
+                    self.bonuses[random.randint(0, len(self.bonuses) - 1)]
             else:
                 self.bonus = None
         else:

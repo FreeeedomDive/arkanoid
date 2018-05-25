@@ -41,7 +41,8 @@ class CustomLevelSelector:
                         self.cursor += 1
 
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_RETURN:
-                    g = game.Game(map="CreatedLevels/" + self.levels[self.cursor])
+                    g = game.Game(map="CreatedLevels/" +
+                                      self.levels[self.cursor])
                     g.start()
 
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_DELETE:
